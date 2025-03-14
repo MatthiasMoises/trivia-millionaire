@@ -9,7 +9,7 @@
         :answerText="answer"
         :answerIndex="index"
         :isCorrectAnswer="question.correct_answer === answer"
-        @answerSubmitted="handleAnswer"
+        @answer-submitted="handleAnswer"
       />
     </div>
   </div>

@@ -29,7 +29,7 @@
       />
     </div>
     <div
-      class="w-1/4 grow bg-gradient-to-r from-blue-700 via-indigo-800 to-blue-700 p-5 text-white"
+      class="w-1/4 grow bg-gradient-to-r from-indigo-800 via-blue-700 to-indigo-800 p-5 text-white"
     >
       <SidebarContainer
         :triviaSteps="triviaSteps"

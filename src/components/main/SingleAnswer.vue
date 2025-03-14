@@ -7,7 +7,7 @@
       answerWrong ? 'bg-red-500 hover:bg-red-500' : '',
     ]"
     @click="submitAnswer"
-    v-html="mappedIndex() + ': ' + answerText + ' (' + isCorrectAnswer + ')'"
+    v-html="mappedIndex() + ': ' + answerText"
   ></div>
 </template>
 
