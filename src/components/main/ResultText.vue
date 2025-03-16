@@ -2,8 +2,8 @@
   <div v-if="$slots.headline" class="text-4xl mb-3">
     <slot name="headline" />
   </div>
-  <div v-if="$slots.image" class="text-center my-5">
-    <slot name="image" />
+  <div class="text-center my-5">
+    <img class="w-3xs h-auto m-auto" :src="imgSrc" :alt="imgAlt" />
   </div>
   <p v-if="$slots.subtext1" class="text-2xl mb-3">
     <slot name="subtext1" />
@@ -13,3 +13,10 @@
     <slot name="subtext2" />
   </p>
 </template>
+
+<script setup lang="ts">
+defineProps<{
+  imgSrc: string;
+  imgAlt: string;
+}>();
+</script>

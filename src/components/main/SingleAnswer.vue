@@ -9,7 +9,7 @@
         : '',
     ]"
     @click="submitAnswer"
-    v-html="mappedIndex() + ': ' + answerText + ' (' + isCorrectAnswer + ')'"
+    v-html="mappedIndex() + ': ' + answerText"
   ></div>
 </template>
 

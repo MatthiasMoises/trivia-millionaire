@@ -1,11 +1,8 @@
 <template>
   <MenuLayout>
     <div v-if="store.currentScore > 0">
-      <ResultText>
+      <ResultText :img-src="winImage" img-alt="You win!">
         <template #headline>Congratulations, {{ store.username }}!</template>
-        <template #image>
-          <img class="w-3xs h-auto m-auto" :src="winImage" alt="You won!" />
-        </template>
         <template #subtext1> You have won </template>
         <template #score>{{ formatToDollar(store.currentScore) }}</template>
         <template #subtext2>Great Job!</template>
@@ -13,11 +10,8 @@
     </div>
 
     <div v-else>
-      <ResultText>
+      <ResultText :img-src="loseImage" img-alt="You lose!">
         <template #headline>Oh no, {{ store.username }}...</template>
-        <template #image>
-          <img class="w-3xs h-auto m-auto" :src="loseImage" alt="You lost!" />
-        </template>
         <template #subtext1> You have won nothing, exactly </template>
         <template #score>{{ formatToDollar(store.currentScore) }}</template>
         <template #subtext2>That's a shame... Better luck next time!</template>
