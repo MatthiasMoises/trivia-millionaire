@@ -1,20 +1,46 @@
 <template>
   <MenuLayout>
-    <h2>
-      Congratulations, {{ store.username }}! You have won ${{
-        store.currentScore
-      }}!!!
-    </h2>
-    <button type="button" class="underline cursor-pointer" @click="restartGame">
+    <div v-if="store.currentScore > 0">
+      <ResultText>
+        <template #headline>Congratulations, {{ store.username }}!</template>
+        <template #image>
+          <img class="w-3xs h-auto m-auto" :src="winImage" alt="You won!" />
+        </template>
+        <template #subtext1> You have won </template>
+        <template #score>{{ formatToDollar(store.currentScore) }}</template>
+        <template #subtext2>Great Job!</template>
+      </ResultText>
+    </div>
+
+    <div v-else>
+      <ResultText>
+        <template #headline>Oh no, {{ store.username }}...</template>
+        <template #image>
+          <img class="w-3xs h-auto m-auto" :src="loseImage" alt="You lost!" />
+        </template>
+        <template #subtext1> You have won nothing, exactly </template>
+        <template #score>{{ formatToDollar(store.currentScore) }}</template>
+        <template #subtext2>That's a shame... Better luck next time!</template>
+      </ResultText>
+    </div>
+    <button
+      type="button"
+      class="min-w-xl mt-5 p-3 border rounded-2xl bg-green-700 hover:bg-green-500 disabled:bg-gray-400 cursor-pointer disabled:cursor-not-allowed"
+      @click="restartGame"
+    >
       Try again
     </button>
   </MenuLayout>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
 import MenuLayout from "../layouts/MenuLayout.vue";
+import { useRouter } from "vue-router";
 import { store } from "../store";
+import ResultText from "../components/main/ResultText.vue";
+import winImage from "../assets/img/win.jpg";
+import loseImage from "../assets/img/lose.jpg";
+import { formatToDollar } from "../utils/helpers";
 
 const router = useRouter();
 

@@ -10,18 +10,14 @@
   >
     <div>{{ questionNumber }} &#x2022;</div>
     <div>
-      {{
-        money.toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD",
-          maximumFractionDigits: 0,
-        })
-      }}
+      {{ formatToDollar(money) }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { formatToDollar } from "../../utils/helpers";
+
 defineProps<{
   questionNumber: number;
   money: number;

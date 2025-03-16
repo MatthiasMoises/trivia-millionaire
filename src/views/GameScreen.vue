@@ -5,35 +5,50 @@
     >
       <div class="absolute left-1">
         <ActionButton
-          v-for="(_, index) in availableAids"
+          v-for="(_aid, index) in availableAids"
           :key="index"
           @click="handleAid"
+          title="Get Help"
           :disabled="aidActive"
-          >Help Me</ActionButton
         >
+          <AcademicCap />
+        </ActionButton>
       </div>
 
       <div class="absolute right-1">
-        <ActionButton @click="isPlaying ? pauseMusic() : startMusic()">{{
-          isPlaying ? "Pause Music" : "Play Music"
-        }}</ActionButton>
-        <ActionButton @click="endGame"> End Game </ActionButton>
+        <ActionButton
+          @click="isPlaying ? pauseMusic() : startMusic()"
+          :title="isPlaying ? 'Mute' : 'Unmute'"
+        >
+          <MusicalNoteIcon
+            :class="isPlaying ? 'text-white' : 'text-slate-700'"
+          />
+        </ActionButton>
+        <ActionButton title="End Game" @click="endGame">
+          <XMarkIcon />
+        </ActionButton>
       </div>
 
-      <QuestionContainer
-        v-if="currentQuestion"
-        :question="currentQuestion"
-        :answers="aidActive ? filteredAnswers() : randomizedAnswers"
-        :aidActive="aidActive"
-        @answerCorrect="handleAnswer"
-      />
+      <div v-if="!showInfo">
+        <QuestionContainer
+          v-if="currentQuestion"
+          :question="currentQuestion"
+          :answers="aidActive ? filteredAnswers() : randomizedAnswers"
+          :aid-active="aidActive"
+          @answer-correct="handleAnswer"
+        />
+      </div>
+      <div v-else>
+        <WinInfo :current-win="store.currentScore" />
+      </div>
     </div>
     <div
       class="w-1/4 grow bg-gradient-to-r from-indigo-800 via-blue-700 to-indigo-800 p-5 text-white"
     >
       <SidebarContainer
-        :triviaSteps="triviaSteps"
-        :currentQuestionNumber="currentQuestionNumber"
+        :trivia-steps="triviaSteps"
+        :current-question-number="currentQuestionNumber"
+        :current-difficulty="determinedDifficulty"
       />
     </div>
   </GameLayout>
@@ -44,17 +59,17 @@ import GameLayout from "../layouts/GameLayout.vue";
 import QuestionContainer from "../components/main/QuestionContainer.vue";
 import SidebarContainer from "../components/sidebar/SidebarContainer.vue";
 import ActionButton from "../components/main/ActionButton.vue";
+import AcademicCap from "../components/icons/AcademicCap.vue";
+import MusicalNoteIcon from "../components/icons/MusicalNoteIcon.vue";
+import XMarkIcon from "../components/icons/XMarkIcon.vue";
+import WinInfo from "../components/main/WinInfo.vue";
 
 import { store } from "../store";
 import { useQuestions, type Difficulty } from "../composables/useQuestions";
 import { computed, ref } from "vue";
-import { shuffle } from "../utils/helpers";
+import { delay, shuffle } from "../utils/helpers";
 import { useRouter } from "vue-router";
-import bgMusic from "../assets/sounds/music1.mp3";
 import { useMusic } from "../composables/useMusic";
-
-// Handle backgroud music
-const { isPlaying, startMusic, pauseMusic } = useMusic(bgMusic);
 
 const currentQuestionNumber = ref(1);
 
@@ -71,8 +86,11 @@ const determinedDifficulty = computed<Difficulty>(() => {
   }
 });
 
+// Handle backgroud music
+const { isPlaying, startMusic, pauseMusic } = useMusic(determinedDifficulty);
+
 const triviaSteps = [
-  { questionNumber: 15, money: 1000000, safetyNet: false },
+  { questionNumber: 15, money: 1000000, safetyNet: true },
   { questionNumber: 14, money: 500000, safetyNet: false },
   { questionNumber: 13, money: 256000, safetyNet: false },
   { questionNumber: 12, money: 128000, safetyNet: false },
@@ -114,32 +132,46 @@ const filteredAnswers = () => {
   );
 };
 
+// Update number to get next question
 const updateQuestionNr = () => {
   currentQuestionNumber.value = currentQuestionNumber.value + 1;
 };
 
-const handleAnswer = (answerCorrect: boolean) => {
+// Handle the user answer
+const handleAnswer = async (answerCorrect: boolean) => {
+  if (answerCorrect) {
+    updateUserScore();
+    showInfo.value = true;
+    await delay(1500);
+
+    if (currentQuestionNumber.value < 15) {
+      aidActive.value = false;
+      updateQuestionNr();
+    } else if (currentQuestionNumber.value === 15) {
+      endGame();
+    }
+  } else {
+    store.currentScore = store.safetyScore;
+    showInfo.value = true;
+    await delay(1500);
+    endGame();
+  }
+  showInfo.value = false;
+};
+
+// Update the user score
+const updateUserScore = () => {
   const win = triviaSteps.find(
     (step) => step.questionNumber === currentQuestionNumber.value
   );
-  store.updatedCurrentScore(win!.money);
+  store.updateCurrentScore(win!.money);
 
-  if (answerCorrect && currentQuestionNumber.value < 15) {
-    if (
-      currentQuestionNumber.value === 5 ||
-      currentQuestionNumber.value === 10
-    ) {
-      store.updateSafetyScore(win!.money);
-    }
-
-    updateQuestionNr();
-    aidActive.value = false;
-  } else {
-    store.currentScore = store.safetyScore;
-    endGame();
+  if (currentQuestionNumber.value % 5 === 0) {
+    store.updateSafetyScore(win!.money);
   }
 };
 
+// Handle game and and routing
 const router = useRouter();
 
 const endGame = () => {
@@ -154,4 +186,7 @@ const handleAid = () => {
   availableAids.value = availableAids.value - 1;
   aidActive.value = true;
 };
+
+// Handle win info bar
+const showInfo = ref(false);
 </script>

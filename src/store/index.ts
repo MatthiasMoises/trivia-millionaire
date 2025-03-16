@@ -11,7 +11,7 @@ export const store = reactive({
   updateSessionToken(token: string) {
     this.sessionToken = token
   },
-  updatedCurrentScore(score: number) {
+  updateCurrentScore(score: number) {
     this.currentScore = score
   },
   updateSafetyScore(score: number) {
