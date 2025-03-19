@@ -35,7 +35,6 @@
 
 <script setup lang="ts">
 import MenuLayout from "../layouts/MenuLayout.vue";
-import ActionButton from "../components/main/ActionButton.vue";
 import { useSession } from "../composables/useSession";
 import { ref } from "vue";
 import { useRouter } from "vue-router";

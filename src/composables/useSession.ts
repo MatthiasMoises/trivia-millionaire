@@ -1,4 +1,5 @@
 import { ref, watchEffect } from "vue"
+import { apiBaseUrl } from "../utils/config"
 
 type Command = 'request' | 'reset'
 
@@ -6,7 +7,7 @@ export const useSession = (command: Command) => {
   const token = ref('')
   const error = ref<string | null>(null)
 
-  const baseUrl = `https://opentdb.com/api_token.php?command=${command}`
+  const baseUrl = `${apiBaseUrl}/api_token.php?command=${command}`
   const tokenUrl = command === 'reset' ? baseUrl + '&token=' + token.value : baseUrl
 
   const getToken = async () => {

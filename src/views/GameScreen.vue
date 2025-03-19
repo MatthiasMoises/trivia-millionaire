@@ -1,7 +1,7 @@
 <template>
   <GameLayout>
     <div
-      class="w-3/4 grow bg-[url(/src/assets/img/background3.jpg)] bg-cover bg-center relative"
+      class="w-3/4 grow bg-[url(/src/assets/img/background1.jpg)] bg-cover bg-center relative"
     >
       <div class="absolute left-1">
         <ActionButton
@@ -65,11 +65,13 @@ import XMarkIcon from "../components/icons/XMarkIcon.vue";
 import WinInfo from "../components/main/WinInfo.vue";
 
 import { store } from "../store";
-import { useQuestions, type Difficulty } from "../composables/useQuestions";
+import { triviaSteps } from "../utils/config";
+import { useQuestions } from "../composables/useQuestions";
 import { computed, ref } from "vue";
 import { delay, shuffle } from "../utils/helpers";
 import { useRouter } from "vue-router";
 import { useMusic } from "../composables/useMusic";
+import type { Difficulty } from "../types/difficulty";
 
 const currentQuestionNumber = ref(1);
 
@@ -89,24 +91,7 @@ const determinedDifficulty = computed<Difficulty>(() => {
 // Handle backgroud music
 const { isPlaying, startMusic, pauseMusic } = useMusic(determinedDifficulty);
 
-const triviaSteps = [
-  { questionNumber: 15, money: 1000000, safetyNet: true },
-  { questionNumber: 14, money: 500000, safetyNet: false },
-  { questionNumber: 13, money: 256000, safetyNet: false },
-  { questionNumber: 12, money: 128000, safetyNet: false },
-  { questionNumber: 11, money: 64000, safetyNet: false },
-  { questionNumber: 10, money: 32000, safetyNet: true },
-  { questionNumber: 9, money: 16000, safetyNet: false },
-  { questionNumber: 8, money: 8000, safetyNet: false },
-  { questionNumber: 7, money: 4000, safetyNet: false },
-  { questionNumber: 6, money: 2000, safetyNet: false },
-  { questionNumber: 5, money: 1000, safetyNet: true },
-  { questionNumber: 4, money: 500, safetyNet: false },
-  { questionNumber: 3, money: 300, safetyNet: false },
-  { questionNumber: 2, money: 200, safetyNet: false },
-  { questionNumber: 1, money: 100, safetyNet: false },
-];
-
+// Prepare questions
 const { questions } = useQuestions(determinedDifficulty, store.sessionToken);
 
 const currentQuestion = computed(() => {

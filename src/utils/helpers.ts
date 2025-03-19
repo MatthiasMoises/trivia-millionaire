@@ -8,7 +8,7 @@ export const shuffle = (array: string[]) => {
 
 export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
-export const formatToDollar = (amount: number) => {
+export const formatToDollar = (amount: number): string => {
   return amount.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
@@ -16,6 +16,6 @@ export const formatToDollar = (amount: number) => {
   })
 }
 
-export const firstLetterUppercase = (word: string) => {
+export const firstLetterUppercase = (word: string): string => {
   return word.charAt(0).toUpperCase() + word.slice(1)
 }

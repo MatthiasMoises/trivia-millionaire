@@ -5,7 +5,7 @@
     :key="triviaStep.questionNumber"
     class="mt-1"
   >
-    <TriviaStep
+    <TriviaStepListItem
       :question-number="triviaStep.questionNumber"
       :money="triviaStep.money"
       :safety-net="triviaStep.safetyNet"
@@ -17,17 +17,14 @@
 
 <script setup lang="ts">
 import PlayerInfo from "./PlayerInfo.vue";
-import TriviaStep from "./TriviaStep.vue";
+import TriviaStepListItem from "./TriviaStepListItem.vue";
 import DifficultyInfo from "./DifficultyInfo.vue";
-import type { Difficulty } from "../../composables/useQuestions";
+import type { Difficulty } from "../../types/difficulty";
+import type { TriviaStep } from "../../types/trivia-step";
 
 const props = defineProps<{
   currentQuestionNumber: number;
-  triviaSteps: Array<{
-    questionNumber: number;
-    money: number;
-    safetyNet: boolean;
-  }>;
+  triviaSteps: Array<TriviaStep>;
   currentDifficulty: Difficulty;
 }>();
 </script>
