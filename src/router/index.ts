@@ -24,7 +24,7 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, _from) => {
-  if (!(store.username && store.username !== '') && to.name !== 'start') {
+  if (!(store.username && store.username !== '') && !(store.sessionToken && store.sessionToken !== '') && to.name !== 'start') {
     return { name: 'start' }
   }
 
